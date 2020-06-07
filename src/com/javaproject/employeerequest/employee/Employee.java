@@ -12,51 +12,13 @@ public class Employee {
     private LocalDate birthDay;
     private String mail;
 
-    public String getfName() {
-        return fName;
-    }
-
-    public void setfName(String fName) {
+    public Employee(String fName, String lName, Profession profession,
+                    double experience, LocalDate birthDay, String mail) {
         this.fName = fName;
-    }
-
-    public String getlName() {
-        return lName;
-    }
-
-    public void setlName(String lName) {
         this.lName = lName;
-    }
-
-    public Profession getProfession() {
-        return profession;
-    }
-
-    public void setProfession(Profession profession) {
         this.profession = profession;
-    }
-
-    public double getExperience() {
-        return experience;
-    }
-
-    public void setExperience(double experience) {
         this.experience = experience;
-    }
-
-    public LocalDate getBirthDay() {
-        return birthDay;
-    }
-
-    public void setBirthDay(LocalDate birthDay) {
         this.birthDay = birthDay;
-    }
-
-    public String getMail() {
-        return mail;
-    }
-
-    public void setMail(String mail) {
         this.mail = mail;
     }
 }
