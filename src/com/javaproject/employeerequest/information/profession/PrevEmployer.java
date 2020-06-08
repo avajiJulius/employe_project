@@ -1,4 +1,4 @@
-package com.javaproject.employeerequest.information;
+package com.javaproject.employeerequest.information.profession;
 
 import java.time.LocalDate;
 

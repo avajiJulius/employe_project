@@ -1,6 +1,6 @@
 package com.javaproject.employeerequest;
 
-import com.javaproject.employeerequest.information.EmployeeInfo;
+import com.javaproject.employeerequest.information.profession.Employee;
 import com.javaproject.employeerequest.profession.Profession;
 
 import java.util.Scanner;
@@ -13,7 +13,7 @@ public class User {
         Profession profession = Profession.valueOf(p);
         System.out.println(profession);
 
-        EmployeeInfo.getProfessionInfo(profession);
+        Employee.getProfessionInfo(profession);
 
 
     }

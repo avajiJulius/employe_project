@@ -1,17 +1,18 @@
 package com.javaproject.employeerequest.form;
 
-import com.javaproject.employeerequest.information.ContactInfo;
-import com.javaproject.employeerequest.information.EmployeeInfo;
-import com.javaproject.employeerequest.information.PersonalInfo;
+import com.javaproject.employeerequest.information.contact.Contact;
+import com.javaproject.employeerequest.information.profession.Employee;
+import com.javaproject.employeerequest.information.person.Person;
+
 
 public class EmployeeForm {
-    private EmployeeInfo employeeInfo;
-    private PersonalInfo personalInfo;
-    private ContactInfo contactInfo;
+    private Employee employee;
+    private Person person;
+    private Contact contact;
 
-    public EmployeeForm(EmployeeInfo employeeInfo, PersonalInfo personalInfo, ContactInfo contactInfo) {
-        this.employeeInfo = employeeInfo;
-        this.personalInfo = personalInfo;
-        this.contactInfo = contactInfo;
+    public EmployeeForm(Employee employee, Person person, Contact contact) {
+        this.employee = employee;
+        this.person = person;
+        this.contact = contact;
     }
 }
