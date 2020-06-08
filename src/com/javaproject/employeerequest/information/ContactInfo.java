@@ -6,4 +6,8 @@ public class ContactInfo {
     public ContactInfo(String mail) {
         this.mail = mail;
     }
+
+    public void getContactInfo() {
+        System.out.println("Your mail");
+    }
 }

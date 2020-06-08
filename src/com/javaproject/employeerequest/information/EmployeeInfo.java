@@ -1,5 +1,7 @@
 package com.javaproject.employeerequest.information;
 
+import com.javaproject.employeerequest.profession.Profession;
+
 public abstract class EmployeeInfo {
     private Profession profession;
     private double experience;
@@ -14,5 +16,12 @@ public abstract class EmployeeInfo {
         this.experience = experience;
         this.about = about;
         this.employer = employer;
+    }
+
+    public static  void getProfessionInfo(Profession profession) {
+        if (profession.equals(Profession.NANNY))
+            NannyInfo.getProfessionInfo();
+        else
+            DriverInfo.getProfessionInfo();
     }
 }
