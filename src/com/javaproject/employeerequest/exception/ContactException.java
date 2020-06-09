@@ -1,5 +1,5 @@
 package com.javaproject.employeerequest.exception;
 
-public class ContactExeption extends Exception {
+public class ContactException extends Exception {
 
 }
