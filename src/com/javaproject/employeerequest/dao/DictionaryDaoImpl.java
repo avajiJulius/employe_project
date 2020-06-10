@@ -1,6 +1,7 @@
 package com.javaproject.employeerequest.dao;
 
 
+import com.javaproject.employeerequest.config.Config;
 import com.javaproject.employeerequest.exception.DaoException;
 import com.javaproject.employeerequest.profession.Profession;
 
@@ -15,8 +16,9 @@ public class DictionaryDaoImpl implements DictionaryDao{
 
     private Connection getConnection() throws SQLException {
         Connection connection = DriverManager.getConnection(
-                "jdbc:postgresql://localhost:5432/js_employee",
-                "postgres", "developer");
+                Config.getProperties(Config.DB_URL),
+                Config.getProperties(Config.DB_LOGIN),
+                Config.getProperties(Config.DB_PASSWORD));
         return connection;
     }
 
