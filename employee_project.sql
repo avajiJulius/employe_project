@@ -1,54 +1,47 @@
-DROP TABLE IF EXISTS e_form;
-DROP TABLE IF EXISTS n_info;
-DROP TABLE IF EXISTS d_info;
-DROP TABLE IF EXISTS e_info;
-DROP TABLE IF EXISTS contact_info;
-DROP TABLE IF EXISTS p_info;
+DROP TABLE IF EXISTS professions;
+DROP TABLE IF EXISTS drivers;
+DROP TABLE IF EXISTS nannies;
+DROP TABLE IF EXISTS prev_employers;
 
-CREATE TABLE p_info (
-	person_id SERIAL,
-	sex varchar(10),
+CREATE TABLE prev_employers (
+	prev_employer_id SERIAL,
+	f_name varchar(15) not null,
+	l_name varchar(20) not null,
+	work_start date not null,
+	work_end date not null,
+	quit_reason text,
+	PRIMARY KEY(prev_employer_id)
+);
+
+CREATE TABLE nannies (
+	nanny_id SERIAL,
+	prev_employer_id integer,
 	f_name varchar(15) not null,
 	l_name varchar(20) not null,
 	b_day date not null,
-	PRIMARY KEY(person_id)
-);
-
-CREATE TABLE e_info (
-	employee_id SERIAL,
-	profession varchar(30) not null,
-	expirience double precision,
+	experience double precision,
+	hourly_pay double precision not null,
 	about text,
-	PRIMARY KEY(employee_id)
-);
-
-CREATE TABLE n_info (
-	nanny_id SERIAL,
-	employee_id integer not null,
-	hourly_pay double precision,
-	children_age integer,
+	mail varchar(30) not null,
 	PRIMARY KEY(nanny_id)
 );
 
-CREATE TABLE d_info (
+CREATE TABLE drivers (
 	driver_id SERIAL,
-	employee_id integer not null,
-	salary double precision,
-	car varchar(20),
+	prev_employer_id integer,
+	f_name varchar(15) not null,
+	l_name varchar(20) not null,
+	b_day date not null,
+	experience double precision,
+	salary double precision not null,
+	car_model varchar(15),
+	about text,
+	mail varchar(30) not null,
 	PRIMARY KEY(driver_id)
 );
 
-CREATE TABLE contact_info (
-	contact_id SERIAL,
-	mail varchar(30) not null,
-	phone_num varchar(15),
-	PRIMARY KEY(contact_id)
+CREATE TABLE professions (
+	profession_id SERIAL,
+	professions varchar(15) not null,
+ 	PRIMARY KEY(profession_id)
 );
-
-CREATE TABLE e_form (
-	form_id SERIAL,
-	person_id integer not null,
-	employee_id integer not null,
-	contact_id integer not null,
-	PRIMARY KEY(form_id)
-)

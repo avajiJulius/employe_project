@@ -11,10 +11,6 @@ public class DriverInfo implements EmployeeInfo{
 
     }
 
-    @Override
-    public void getSex() {
-
-    }
 
     @Override
     public void getBirthDay() {
