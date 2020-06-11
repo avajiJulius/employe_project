@@ -2,19 +2,19 @@ package com.javaproject.employeerequest;
 
 
 import com.javaproject.employeerequest.dao.DictionaryDaoImpl;
-import com.javaproject.employeerequest.forms.FormBuilder;
-import com.javaproject.employeerequest.profession.Profession;
+import com.javaproject.employeerequest.domain.EmployeeForm;
+import com.javaproject.employeerequest.domain.data.components.City;
 
 import java.util.List;
 
 public class User {
-    private static FormBuilder form;
+    private static EmployeeForm form;
 
     public static void main(String[] args) throws Exception {
 
-        List<Profession> d = new DictionaryDaoImpl().findProfession("d");
-        for (Profession s : d)
-            System.out.println(s.getProfession());
+        List<City> citiesList = new DictionaryDaoImpl().findCity("burg");
+        for (City city : citiesList)
+            System.out.println(city.getCityName());
 //        configure();
 //        getForm();
 

@@ -2,8 +2,9 @@ package com.javaproject.employeerequest.dao;
 
 
 import com.javaproject.employeerequest.config.Config;
+import com.javaproject.employeerequest.domain.data.components.City;
 import com.javaproject.employeerequest.exception.DaoException;
-import com.javaproject.employeerequest.profession.Profession;
+
 
 import java.sql.*;
 import java.util.LinkedList;
@@ -11,8 +12,8 @@ import java.util.List;
 
 public class DictionaryDaoImpl implements DictionaryDao{
 
-    private static final String GET_PROFESSION = "SELECT profession_id, professions FROM professions " +
-            "WHERE UPPER(professions) LIKE UPPER(?)";
+    private static final String GET_CITY = "SELECT city_id, city_name FROM cities " +
+            "WHERE UPPER(city_name) LIKE UPPER(?)";
 
     private Connection getConnection() throws SQLException {
         Connection connection = DriverManager.getConnection(
@@ -24,18 +25,18 @@ public class DictionaryDaoImpl implements DictionaryDao{
 
 
 
-    public List<Profession> findProfession(String profession) throws DaoException{
-        List<Profession> result = new LinkedList<>();
+    public List<City> findCity(String cityName) throws DaoException{
+        List<City> result = new LinkedList<>();
 
         try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(GET_PROFESSION)) {
+             PreparedStatement statement = connection.prepareStatement(GET_CITY)) {
 
-            statement.setString(1, "%" + profession + "%");
+            statement.setString(1, "%" + cityName + "%");
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                Profession p = new Profession(rs.getInt("profession_id"),
-                        rs.getString("professions"));
-                result.add(p);
+                City city = new City(rs.getInt("city_id"),
+                        rs.getString("city_name"));
+                result.add(city);
             }
         } catch (SQLException ex) {
             throw new DaoException(ex);
