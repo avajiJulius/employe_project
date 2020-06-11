@@ -7,7 +7,8 @@ import java.util.List;
 
 public class EducationData {
     private University university;
-    private List<Course> courses;
+    //TODO list of course
+    private Course course;
 
     public University getUniversity() {
         return university;
@@ -17,11 +18,11 @@ public class EducationData {
         this.university = university;
     }
 
-    public List<Course> getCourses() {
-        return courses;
+    public Course getCourse() {
+        return course;
     }
 
-    public void setCourses(List<Course> courses) {
-        this.courses = courses;
+    public void setCourse(Course course) {
+        this.course = course;
     }
 }

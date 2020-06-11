@@ -3,9 +3,12 @@ package com.javaproject.employeerequest.domain;
 import com.javaproject.employeerequest.domain.data.EducationData;
 import com.javaproject.employeerequest.domain.data.EmployeeData;
 import com.javaproject.employeerequest.domain.data.PersonData;
+import com.javaproject.employeerequest.domain.data.PreviousEmployerData;
 import com.javaproject.employeerequest.domain.data.components.FormStatus;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EmployeeForm {
     private long employeeFormId;
@@ -13,6 +16,7 @@ public class EmployeeForm {
     private LocalDateTime formDate;
     private PersonData personData;
     private EmployeeData employeeData;
+    private List<PreviousEmployerData> previousEmployers;
     private EducationData education;
 
 
@@ -63,4 +67,15 @@ public class EmployeeForm {
     public void setPersonData(PersonData personData) {
         this.personData = personData;
     }
+
+    public List<PreviousEmployerData> getPreviousEmployers() {
+        return previousEmployers;
+    }
+
+    public void addPreviousEmployers(PreviousEmployerData previousEmployer) {
+        if (previousEmployers == null)
+            previousEmployers = new ArrayList<>(4);
+        previousEmployers.add(previousEmployer);
+    }
+
 }

@@ -1,8 +1,8 @@
-package com.javaproject.employeerequest.domain.data.components;
+package com.javaproject.employeerequest.domain.data;
 
 import java.time.LocalDate;
 
-public class PreviousEmployer {
+public class PreviousEmployerData {
     private long previousEmployerId;
     private String organization;
     private String position;

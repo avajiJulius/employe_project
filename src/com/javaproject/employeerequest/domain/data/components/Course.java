@@ -2,15 +2,23 @@ package com.javaproject.employeerequest.domain.data.components;
 
 public class Course {
 
-    private long courseCode;
+    private long courseId;
     private String courseName;
 
-    public long getCourseCode() {
-        return courseCode;
+    public Course() {
     }
 
-    public void setCourseCode(long courseCode) {
-        this.courseCode = courseCode;
+    public Course(long courseId, String courseName) {
+        this.courseId = courseId;
+        this.courseName = courseName;
+    }
+
+    public long getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(long courseId) {
+        this.courseId = courseId;
     }
 
     public String getCourseName() {

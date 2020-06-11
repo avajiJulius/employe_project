@@ -13,7 +13,8 @@ public class PersonData {
     private City currentCity;
     private RelocateStatus relocateStatus;
     private String about;
-    private Mail email;
+    //TODO make mail Class MAil
+    private String email;
 
     public String getFirstName() {
         return firstName;
@@ -63,11 +64,11 @@ public class PersonData {
         this.about = about;
     }
 
-    public Mail getEmail() {
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(Mail email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 }

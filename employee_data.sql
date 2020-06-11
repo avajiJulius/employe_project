@@ -12,6 +12,7 @@ insert into  universities (university_id, university_name) values
 
 insert into courses(course_id, course_name) values
 (1, 'CS50'),
-(2, 'Coursera JavaCourse');
+(2, 'Coursera JavaCourse'),
+(3 , 'other');
 
 

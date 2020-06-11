@@ -1,20 +1,11 @@
+DROP TABLE IF EXISTS prev_employers;
 DROP TABLE IF EXISTS employee_form;
 DROP TABLE IF EXISTS courses;
 DROP TABLE IF EXISTS universities;
-DROP TABLE IF EXISTS prev_employers;
 DROP TABLE IF EXISTS cities;
 
 
-CREATE TABLE prev_employers (
-	prev_employer_id SERIAL,
-	organization varchar(40) not null,
-	work_start date not null,
-	work_end date not null,
-	position varchar(40) not null,
-	progress text not null,
-	quit_reason text,
-	PRIMARY KEY(prev_employer_id)
-);
+
 
 CREATE TABLE cities (
     city_id integer not null,
@@ -36,16 +27,16 @@ CREATE TABLE courses (
 
 
 CREATE TABLE employee_form (
-	form_id SERIAL,
-	form_status int not null,
-	form_date timestamp not null,
+	e_form_id SERIAL,
+	e_form_status int not null,
+	e_form_date timestamp not null,
 	f_name varchar(15) not null,
 	l_name varchar(20) not null,
 	b_day date not null,
 	city_id integer not null,
 	relocate_status int not null,
     profession int not null,
-    schedult_status int not null,
+    schedule_status int not null,
     experience double precision,
     prev_employer_id  integer,
     salary double precision,
@@ -53,11 +44,24 @@ CREATE TABLE employee_form (
     course_id integer not null,
 	about text,
 	mail varchar(30) not null,
-    PRIMARY KEY(form_id),
+    PRIMARY KEY(e_form_id),
     FOREIGN KEY(prev_employer_id) REFERENCES prev_employers(prev_employer_id) ON DELETE RESTRICT,
     FOREIGN KEY(university_id) REFERENCES universities(university_id) ON DELETE RESTRICT,
     FOREIGN KEY(course_id) REFERENCES courses(course_id) ON DELETE RESTRICT,
 	FOREIGN KEY(city_id) REFERENCES cities(city_id) ON DELETE RESTRICT
 );
 
+CREATE TABLE prev_employers (
+	prev_employer_id SERIAL,
+	e_form_id integer not null,
+	organization varchar(40) not null,
+	work_start date not null,
+	work_end date not null,
+	position varchar(40) not null,
+	progress text not null,
+	quit_reason text,
+	PRIMARY KEY(prev_employer_id),
+	FOREIGN KEY(e_form_id) REFERENCES employee_form(e_form_id) ON DELETE RESTRICT
+);
 
+CREATE INDEX idx_employee_form_id ON prev_employers(e_form_id);
