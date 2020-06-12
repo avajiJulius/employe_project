@@ -40,4 +40,6 @@ public class EmployeeData {
     public void setSalary(double salary) {
         this.salary = salary;
     }
+
+
 }

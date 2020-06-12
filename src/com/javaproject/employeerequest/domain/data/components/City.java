@@ -1,7 +1,7 @@
 package com.javaproject.employeerequest.domain.data.components;
 
 public class City {
-    private long cityId;
+    private Long cityId;
     private String cityName;
 
     public City(long cityId, String cityName) {
@@ -12,11 +12,11 @@ public class City {
     public City() {
     }
 
-    public long getCityId() {
+    public Long getCityId() {
         return cityId;
     }
 
-    public void setCityId(long cityId) {
+    public void setCityId(Long cityId) {
         this.cityId = cityId;
     }
 
