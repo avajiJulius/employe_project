@@ -28,8 +28,10 @@ public class EmployeeFormDaoImpl implements EmployeeFormDao {
             "work_end, position, progress, quit_reason)" +
             "VALUES (?, ?, ?, ?, ?, ?, ?);";
 
-    private static final String SELECT_FORMS = "SELECT * FROM employee_form " +
-            "WHERE e_form-status = 0 ORDER BY e_form_date";
+    private static final String SELECT_FORMS = "SELECT ef.* , cs.city_name , us.university_name FROM employee_form ef " +
+            "INNER JOIN cities cs ON cs.city_id = ef.city_id " +
+            "INNER JOIN universities us ON us.university_id = ef.university_id " +
+            "WHERE e_form_status = 0 ORDER BY e_form_date";
 
     //TODO refactoring - create connect method
     private Connection getConnection() throws SQLException {
@@ -54,6 +56,8 @@ public class EmployeeFormDaoImpl implements EmployeeFormDao {
                 statement.setInt(9, ScheduleStatus.UNSELECTED.ordinal());
                 statement.setTimestamp(2, java.sql.Timestamp.valueOf(LocalDateTime.now()));
                 statement.setDate(5, java.sql.Date.valueOf(ef.getPersonData().getBirthDay()));
+
+//                PreviousEmployerData ped = ef.getPreviousEmployers();
 //                statement.setInt(11, ef.getPreviousEmployers());
 
                 PersonData person = ef.getPersonData();
@@ -93,7 +97,20 @@ public class EmployeeFormDaoImpl implements EmployeeFormDao {
         return result;
     }
 
-    @Override
+    private void savePreviousEmployers(Connection connection, EmployeeForm ef, Long efId) throws SQLException{
+        try (PreparedStatement statement = connection.prepareStatement(INSERT_EMPLOYER)) {
+            for (PreviousEmployerData employer : ef.getPreviousEmployers()) {
+                statement.setLong(1, efId);
+                statement.setString(2,employer.getOrganization());
+                statement.setDate(3, java.sql.Date.valueOf(employer.getWorkStart()));
+                statement.setDate(4, java.sql.Date.valueOf(employer.getWorkEnd()));
+                statement.setString(5, employer.getPosition());
+                statement.setString(6, employer.getProgress());
+                statement.setString(7, employer.getQuitReason());
+            }
+        }
+    }
+
     public List<EmployeeForm> getEmployeeForm() throws DaoException {
         List<EmployeeForm> result = new LinkedList<>();
 
@@ -118,7 +135,9 @@ public class EmployeeFormDaoImpl implements EmployeeFormDao {
 
     private void fillEducationData(ResultSet rs) throws SQLException {
         EducationData ed = new EducationData();
-        University u = new University(rs.getLong("university_id"),"");
+        Long universityId = rs.getLong("university_id");
+        String universityName = rs.getString("university_id");
+        University u = new University(universityId, universityName);
         ed.setUniversity(u);
         Course c = new Course(rs.getLong("course_id"), "");
         ed.setCourse(c);
@@ -143,25 +162,13 @@ public class EmployeeFormDaoImpl implements EmployeeFormDao {
         pd.setFirstName(rs.getString("f_name"));
         pd.setLastName(rs.getString("l_name"));
         pd.setBirthDay(rs.getDate("b_day").toLocalDate());
-        City city = new City(rs.getLong("city_id"), "");
+        Long cityId = rs.getLong("city_id");
+        String cityName = rs.getString("city_name");
+        City city = new City(cityId, cityName);
         pd.setCurrentCity(city);
         pd.setRelocateStatus(RelocateStatus.fromValue(rs.getInt("relocate_status")));
         pd.setAbout(rs.getString("about"));
         pd.setEmail(rs.getString("mail"));
-    }
-
-    private void savePreviousEmployers(Connection connection, EmployeeForm ef, Long efId) throws SQLException{
-        try (PreparedStatement statement = connection.prepareStatement(INSERT_EMPLOYER)) {
-            for (PreviousEmployerData employer : ef.getPreviousEmployers()) {
-                statement.setLong(1, efId);
-                statement.setString(2,employer.getOrganization());
-                statement.setDate(3, java.sql.Date.valueOf(employer.getWorkStart()));
-                statement.setDate(4, java.sql.Date.valueOf(employer.getWorkEnd()));
-                statement.setString(5, employer.getPosition());
-                statement.setString(6, employer.getProgress());
-                statement.setString(7, employer.getQuitReason());
-            }
-        }
     }
 
 }
