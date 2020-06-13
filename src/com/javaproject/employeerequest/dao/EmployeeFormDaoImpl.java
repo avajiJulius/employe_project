@@ -10,9 +10,12 @@ import com.javaproject.employeerequest.domain.data.components.*;
 import com.javaproject.employeerequest.exception.DaoException;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class EmployeeFormDaoImpl implements EmployeeFormDao {
     private static final String INSERT_FORM =
@@ -31,7 +34,11 @@ public class EmployeeFormDaoImpl implements EmployeeFormDao {
     private static final String SELECT_FORMS = "SELECT ef.* , cs.city_name , us.university_name FROM employee_form ef " +
             "INNER JOIN cities cs ON cs.city_id = ef.city_id " +
             "INNER JOIN universities us ON us.university_id = ef.university_id " +
-            "WHERE e_form_status = 0 ORDER BY e_form_date";
+            "WHERE e_form_status = ? ORDER BY e_form_date";
+
+    private static final String SELECT_PREV_EMPLOYER = "SELECT pe.* " +
+            "FROM prev_employers AS pe " +
+            "WHERE pe.e_form_id IN ";
 
     //TODO refactoring - create connect method
     private Connection getConnection() throws SQLException {
@@ -117,14 +124,21 @@ public class EmployeeFormDaoImpl implements EmployeeFormDao {
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_FORMS)) {
 
+            statement.setInt(1, FormStatus.UNCHECKED.ordinal());
             ResultSet rs = statement.executeQuery();
             while(rs.next()){
                 EmployeeForm ef = new EmployeeForm();
                 fillEmployeeForm(rs, ef);
-                fillPersonData(rs);
-                fillEmployeeData(rs);
-                fillEducationData(rs);
+                PersonData pd = fillPersonData(rs);
+                EmployeeData ed = fillEmployeeData(rs);
+                EducationData edd = fillEducationData(rs);
+                ef.setPersonData(pd);
+                ef.setEmployeeData(ed);
+                ef.setEducation(edd);
+
+                result.add(ef);
             }
+            findPrevEmployers(connection, result);
 
             rs.close();
         } catch (SQLException ex) {
@@ -133,22 +147,42 @@ public class EmployeeFormDaoImpl implements EmployeeFormDao {
         return result;
     }
 
-    private void fillEducationData(ResultSet rs) throws SQLException {
+    private void findPrevEmployers(Connection connection, List<EmployeeForm> result) throws SQLException {
+            String pe = "(" + result.stream().map(ef -> String.valueOf(ef.getEmployeeFormId()))
+                    .collect(Collectors.joining(",")) + ")";
+
+            Map<Long, EmployeeForm> maps = result.stream().collect(Collectors
+                    .toMap(ef -> ef.getEmployeeFormId(), ef -> ef));
+
+            try(PreparedStatement statement = connection.prepareStatement(SELECT_PREV_EMPLOYER + pe)) {
+                ResultSet rs = statement.executeQuery();
+                while(rs.next()) {
+                    PreviousEmployerData ped = fillPrevEmployerData(rs);
+                    EmployeeForm ef = maps.get(rs.getLong("e_form_id"));
+                    ef.addPreviousEmployers(ped);
+                }
+
+            }
+    }
+
+    private EducationData fillEducationData(ResultSet rs) throws SQLException {
         EducationData ed = new EducationData();
         Long universityId = rs.getLong("university_id");
-        String universityName = rs.getString("university_id");
+        String universityName = rs.getString("university_name");
         University u = new University(universityId, universityName);
         ed.setUniversity(u);
         Course c = new Course(rs.getLong("course_id"), "");
         ed.setCourse(c);
+        return ed;
     }
 
-    private void fillEmployeeData(ResultSet rs) throws SQLException{
+    private EmployeeData fillEmployeeData(ResultSet rs) throws SQLException{
         EmployeeData ed = new EmployeeData();
         ed.setExperience(rs.getDouble("experience"));
         ed.setSalary(rs.getDouble("salary"));
         ed.setProfession(Profession.fromValue(rs.getInt("profession")));
         ed.setScheduleStatus((ScheduleStatus.fromValue(rs.getInt("schedule_status"))));
+        return ed;
     }
 
     private void fillEmployeeForm(ResultSet rs, EmployeeForm ef) throws SQLException {
@@ -157,7 +191,7 @@ public class EmployeeFormDaoImpl implements EmployeeFormDao {
         ef.setStatus(FormStatus.fromValue(rs.getInt("e_form_status")));
     }
 
-    private void fillPersonData(ResultSet rs) throws SQLException {
+    private PersonData fillPersonData(ResultSet rs) throws SQLException {
         PersonData pd = new PersonData();
         pd.setFirstName(rs.getString("f_name"));
         pd.setLastName(rs.getString("l_name"));
@@ -169,6 +203,19 @@ public class EmployeeFormDaoImpl implements EmployeeFormDao {
         pd.setRelocateStatus(RelocateStatus.fromValue(rs.getInt("relocate_status")));
         pd.setAbout(rs.getString("about"));
         pd.setEmail(rs.getString("mail"));
+        return pd;
+    }
+
+    private PreviousEmployerData fillPrevEmployerData(ResultSet rs) throws SQLException {
+        String organization = rs.getString("organization");
+        LocalDate workStart = rs.getDate("work_start").toLocalDate();
+        LocalDate workEnd = rs.getDate("work_end").toLocalDate();
+        String position = rs.getString("position");
+        String progress = rs.getString("progress");
+        String quit_reason = rs.getString("quit_reason");
+        PreviousEmployerData ped = new PreviousEmployerData();
+
+        return ped;
     }
 
 }
